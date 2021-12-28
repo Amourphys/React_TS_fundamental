@@ -1,50 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import './App.css';
-import Card from './components/Card';
-import { CardVariant } from './components/Card';
-import UserList from './components/UserList';
-import { ITodo, IUser } from './types/types';
-import axios from 'axios';
-import List from './components/List';
-import UserItem from './components/UserItem';
-import TodoItem from './components/TodoItem';
+import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
+import UsersPage from './components/UsersPage';
+import TodosPage from './components/TodosPage';
+import UserItemPage from './components/UserItemPage';
 
 function App() {
 
-  const [users, setUsers] = useState<IUser[]>([]);
-  const [todos, setTodos] = useState<ITodo[]>([])
-
-  useEffect(() => {
-    fetchUsers()
-    fetchYodos()
-  }, [])
-
-  async function fetchUsers() {
-    try {
-      const response = await axios.get<IUser[]>('https://jsonplaceholder.typicode.com/users')
-      setUsers(response.data)
-    } catch (e) {
-      alert(e)
-    }
-  }
-
-  async function fetchYodos() {
-    try {
-      const response = await axios.get<ITodo[]>('https://jsonplaceholder.typicode.com/todos?_limit=10')
-      setTodos(response.data)
-    } catch (e) {
-      alert(e)
-    }
-  }
-
   return (
-    <div className="App">
-      <Card onClick={(num) => console.log('click', num)} variant={CardVariant.primary} width='200px' height='200px'>
-        <button>Click</button>
-      </Card>
-      <List items={users} renderItem={(user: IUser) => <UserItem user={user} key={user.id} />} />
-      <List items={todos} renderItem={(todo: ITodo) => <TodoItem todo={todo} key={todo.id} />} />
-    </div>
+
+    <BrowserRouter>
+      <div>
+        <div>
+          <NavLink to='/users'>Users</NavLink>
+          <NavLink to='/todos'>Todos</NavLink>
+        </div>
+        <Routes>
+          <Route path='/users' element={<UsersPage />} />
+          <Route path='/users/:id' element={<UserItemPage />} />
+          <Route path='/todos' element={<TodosPage />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
+
   );
 }
 
